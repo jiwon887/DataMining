@@ -1,5 +1,6 @@
 import csv
 from collections import defaultdict # 키 없이 사용 가능한 dictionary
+from itertools import combinations # 조합 사용하기 위한 라이브러리
 
 
 
@@ -41,6 +42,8 @@ class Aprior:
                 extendItemSet = prevItemSets[i].union(prevItemSets[j])
                 if len(extendItemSet) == length:
                     candidates.add(extendItemSet)
+                    if all(frozenset(subset) in prevItemSet for subset in combinations(extendItemSet, length - 1)):
+                        candidates.add(extendItemSet)
 
         # 후보 집합에서 threshold 넘는 경우를 담을 집합
         new_itemsets = defaultdict(int)
@@ -56,16 +59,28 @@ class Aprior:
 
         return  {itemset: count for itemset, count in new_itemsets.items() if count >= self.threshold}
     
+    def FindItemSet(self):
+        itemset, numTranscation = self.GenInitialSet()
+        length = 2
 
-# 테스트 실행
-a = Aprior('market.csv', threshold=30, confidence=0.5)
+        while True:
+            extend = self.ExtendSet(itemset, length)
+            if not extend:
+                break
+            itemset.update(extend)
+            length +=1
 
-# 초기 빈번한 아이템셋 생성
+        self.frequentItemSet = itemset
+
+        return itemset
+
+# 테스트
+a = Aprior('market.csv', threshold=100, confidence=0.5)
+
+
 initdataset, numTranscation = a.GenInitialSet()
 
-# 2-아이템셋 확장
-extended_itemset = a.ExtendSet(initdataset, 2)
+kk = a.FindItemSet()
 
-# 결과 출력
-for itemset, count in extended_itemset.items():
+for itemset, count in kk.items():
     print(f"{set(itemset)}: {count}\n")
