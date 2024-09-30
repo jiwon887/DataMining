@@ -2,7 +2,6 @@ import csv
 from collections import defaultdict  # 키 없이 사용 가능한 dictionary
 from itertools import combinations # 조합 사용하기 위한 라이브러리
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D 
 
 class Aprior:
 
@@ -104,40 +103,36 @@ class Aprior:
             print("No rules found")
             return
 
-        # 각각의 규칙에서 support, confidence, interest 값을 저장할 리스트
         supports = []
         confidences = []
         interests = []
 
-        # 규칙에서 support, confidence, interest 값을 추출
         for rule in rules:
             supports.append(rule['support'])
             confidences.append(rule['confidence'])
             interests.append(rule['interest'])
 
-        # 그래프 그리기
+        
         plt.figure(figsize=(12, 6))
 
-        # 1. Support vs Interest
+        # support , interest
         plt.subplot(1, 2, 1)
         plt.scatter(supports, interests, c='r', marker='o')
         plt.xlabel('Support')
         plt.ylabel('Interest')
         plt.title('Support vs Interest')
 
-        # 2. Confidence vs Interest
+        # confidence , interest
         plt.subplot(1, 2, 2)
         plt.scatter(confidences, interests, c='b', marker='o')
         plt.xlabel('Confidence')
         plt.ylabel('Interest')
         plt.title('Confidence vs Interest')
 
-        # 그래프 보여주기
-        plt.tight_layout()  # 레이아웃 조정
+        plt.tight_layout()  
         plt.show()
 
 
-# 테스트
 a = Aprior('market.csv', threshold=100, confidence=0.4)
 
 a.FindItemSet()
