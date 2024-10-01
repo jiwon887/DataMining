@@ -57,6 +57,7 @@ class Aprior:
         length = 2
 
         while True:
+            self.threshold -= 15
             extend = self.ExtendSet(itemset, length)
             if not extend:
                 break
@@ -110,7 +111,7 @@ class Aprior:
 
 
 # 테스트
-a = Aprior('market.csv', threshold=100, confidence=0.3)
+a = Aprior('market.csv', threshold=150, confidence=0.4)
 
 a.FindItemSet()
 a.PrintRules()
